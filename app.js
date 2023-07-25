@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var methodOverride = require('method-override');
 
 // Change to the resource in routes
 var indexRouter = require('./routes/index');
@@ -14,11 +15,18 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(function(request, response, next) {
+  console.log('Hello SEI!');
+  response.locals.time = new Date().toLocaleTimeString();
+  next();
+});
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
 // Use the routes 
 app.use('/', indexRouter);
